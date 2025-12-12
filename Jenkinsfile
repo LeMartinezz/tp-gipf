@@ -1,40 +1,47 @@
-pipeline{
+pipeline {
     agent any
 
-        stages {
-            stage('Compile') {
-                steps {
-                    sh 'gradle compileJava'
-                }
+    stages {
+        stage('Compile') {
+            steps {
+                sh './gradlew compileJava'
             }
-            stage('Build') {
-                steps {
-                    echo 'Building...'
-                }
+        }
+
+        stage('Build') {
+            steps {
+                sh './gradlew build'
             }
-            stage('Test') {
-                steps {
-                    echo 'gradle test'
-                }
+        }
+
+        stage('Test') {
+            steps {
+                sh './gradlew test'
             }
-            stage('build & sonarQube analysis') {
-                steps {
-                    sh 'mvn clean package sonar:sonar'
-                }
-          }
-            stage('Quality Gate') {
-                steps {
+        }
+
+        stage('Build & SonarQube analysis') {
+            steps {
+                sh './gradlew clean build sonarqube'
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                script {
                     timeout(time: 1, unit: 'HOURS') {
                         def qg = waitForQualityGate()
                         if (qg.status != 'OK') {
                             error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                        }
                     }
                 }
             }
-            stage('Deploy') {
-                steps {
-                    echo 'Deploying...'
-                }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying...'
             }
         }
     }
