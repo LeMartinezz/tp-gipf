@@ -23,9 +23,7 @@ pipeline {
 
         stage('Build & SonarQube analysis') {
             steps {
-                withSonarQubeEnv('sonarqube') {
-                    sh './gradlew --no-daemon sonarqube -Dsonar.login=$SONAR_TOKEN'
-    }
+                sh './gradlew -Dhttps.proxyhost=prox1-rech -Dhttps.proxyport=3128 clean build sonarqube'
             }
         }
 
