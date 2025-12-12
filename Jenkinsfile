@@ -9,11 +9,11 @@ pipeline {
         //    }
         //}
 
-        //stage('Compile') {
-        //    steps {
-        //        sh './gradlew compileJava'
-        //    }
-        //}
+        stage('Compile') {
+            steps {
+                sh './gradlew -Dhttpsproxyhost=proxy1-rech -Dhttps.proxyport=3128 compileJava'
+            }
+        }
 
         //stage('Test') {
         //    steps {
