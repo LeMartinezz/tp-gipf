@@ -5,32 +5,25 @@ pipeline {
 
         stage('Build') {
             steps {
-                withEnv(["GRADLE_OPTS=-Dhttps.proxyHost=proxy1-rech -Dhttps.proxyPort=3128"]) {
-                    sh "./gradlew clean assemble --no-daemon --stacktrace --console=plain"
-                }
+                sh './gradlew -Dhttps.proxyHost=proxy1-rech -Dhttps.proxyPort=3128 build'
+            }
+        }
+
+        stage('Compile') {
+            steps {
+                sh './gradlew compileJava'
             }
         }
 
         stage('Test') {
             steps {
-                withEnv(["GRADLE_OPTS=-Dhttps.proxyHost=proxy1-rech -Dhttps.proxyPort=3128"]) {
-                    sh "./gradlew --init-script init-jacoco.gradle test jacocoTestReport --no-daemon --stacktrace --console=plain"
-                }
-            }
-        }
-
-        stage('Publish Test & Coverage') {
-            steps {
-                junit 'build/test-results/test/*.xml'
-                archiveArtifacts artifacts: '**/build/reports/jacoco/**', fingerprint: true
+                sh './gradlew test'
             }
         }
 
         stage('Build & SonarQube analysis') {
             steps {
-                withEnv(["GRADLE_OPTS=-Dhttps.proxyHost=proxy1-rech -Dhttps.proxyPort=3128"]) {
-                    sh "./gradlew sonarqube --no-daemon --stacktrace --console=plain"
-                }
+                sh './gradlew clean build sonarqube'
             }
         }
 
