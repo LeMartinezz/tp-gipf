@@ -7,18 +7,15 @@
  * user guide available at https://docs.gradle.org/3.2.1/userguide/tutorial_java_projects.html
  */
 
-
 plugins {
     id 'org.liquibase.gradle' version '2.2.0'
+    id "org.sonarqube" version "3.5.0.2730"
 }
+
 // Apply the java plugin to add support for Java
 apply plugin: 'java'
 
-
-// In this section you declare where to find the dependencies of your project
 repositories {
-    // Use 'jcenter' for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
     mavenCentral()
 }
 
@@ -26,7 +23,6 @@ test {
     useJUnitPlatform()
 }
 
-// In this section you declare the dependencies for your production and test code
 dependencies {
     implementation 'org.postgresql:postgresql:42.7.3'
     testImplementation 'ch.qos.logback:logback-classic:1.5.6'
@@ -42,3 +38,12 @@ jar {
         attributes 'Main-Class': 'gipf.Main'
     }
 }
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "gipf"
+        property "sonar.projectName", "gipf"
+        property "sonar.sourceEncoding", "UTF-8"
+    }
+}
+
