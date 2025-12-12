@@ -27,6 +27,13 @@ pipeline {
             }
         }
 
+        stage('Build JAR') {
+            steps {
+                sh './gradlew --no-daemon -Dhttps.proxyhost=prox1-rech -Dhttps.proxyport=3128 assemble'
+                archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
+            }
+        }
+        
         stage('Quality Gate') {
             steps {
                 script {
