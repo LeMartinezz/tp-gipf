@@ -17,7 +17,14 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh './gradlew test'
+                sh './gradlew --init-script init-jacoco.gradle test jacocoTestReport'
+            }
+        }
+
+        stage('Publish Test & Coverage') {
+            steps {
+                junit 'build/test-results/test/*.xml'
+                archiveArtifacts artifacts: '**/build/reports/jacoco/**', fingerprint: true
             }
         }
 
