@@ -23,7 +23,7 @@ pipeline {
 
         stage('Build & SonarQube analysis') {
             steps {
-                sh './gradlew clean build sonarqube'
+                sh './gradlew -Dhttps.proxyhost=prox1-rech -Dhttps.proxyport=3128 clean build sonarqube'
             }
         }
 
